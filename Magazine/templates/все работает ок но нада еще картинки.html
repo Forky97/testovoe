@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Добавление товаров </title>
+
+    <style rel="stylesheet">
+
+          #product-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  label, input, textarea {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+  }
+
+  input[type="file"] {
+    margin-top: 5px;
+  }
+
+  .attribute {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  .attribute input {
+    width: 100%;
+  }
+
+  .remove-attribute {
+    align-self: center;
+    justify-self: end;
+    cursor: pointer;
+  }
+
+  /* Стили для кнопки "Добавить атрибут" */
+  #add-attribute {
+    display: block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  #add-attribute:hover {
+    background-color: #0056b3;
+  }
+
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" />
+
+</head>
+<body>
+
+
+<!-- HTML форма для добавления товара -->
+
+<div>
+<form id="product-form" enctype="multipart/form-data">
+  <label for="name">Название:</label>
+  <input type="text" name="name" id="name">
+
+
+    <!-- Зона для загрузки картинок -->
+  <div id="image-dropzone" class="dropzone"></div>
+  <input type="file" id="image-input" multiple style="display:none;">
+  <label for="image-input" id="image-input-label">Выберите файлы</label>
+
+
+  <label for="price">Цена:</label>
+  <input type="number" name="price" id="price">
+
+  <label for="description">Описание:</label>
+  <textarea name="description" id="description"></textarea>
+
+  <label for="attributes">Характеристики:</label>
+    <div id="attributes">
+      <div class="attribute">
+        <input type="text" name="key[]" placeholder="Ключ">
+        <input type="text" name="value[]" placeholder="Значение">
+        <button id="add-attribute">Добавить характеристику</button>
+        <button id="remove-attribute">Удалить характеристику</button>
+      </div>
+    </div>
+
+  <button type="submit">Добавить товар</button>
+</form>
+</div>
+
+
+
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"> </script>
+
+<script >
+
+var myDropzone = new Dropzone("#image-dropzone", {
+  url: "localhost:8000/api/add",
+  autoProcessQueue: false,
+
+});
+
+
+
+
+
+document.getElementById('add-attribute').addEventListener('click', function(event) {
+  event.preventDefault(); // Предотвращаем стандартное действие формы
+  var attributesDiv = document.getElementById('attributes');
+  var attributeDiv = document.createElement('div');
+  attributeDiv.className = 'attribute';
+    console.log(1);
+
+  attributeDiv.innerHTML = `
+    <input type="text" name="key[]" placeholder="Ключ">
+    <input type="text" name="value[]" placeholder="Значение">
+    <button class="remove-attribute">Удалить</button>
+  `;
+  attributesDiv.appendChild(attributeDiv);
+});
+
+document.getElementById('remove-attribute').addEventListener('click', function(event) {
+  event.preventDefault(); // Предотвращаем стандартное действие кнопки
+  var attributesDiv = document.getElementById('attributes');
+  var attributeDivs = attributesDiv.getElementsByClassName('attribute');
+  if (attributeDivs.length > 1) {
+    attributesDiv.removeChild(attributeDivs[attributeDivs.length - 1]);
+  }
+});
+
+document.addEventListener('click', function(event) {
+  if (event.target.classList.contains('remove-attribute')) {
+    event.preventDefault(); // Предотвращаем стандартное действие кнопки
+    var attributeDiv = event.target.parentNode;
+    var attributesDiv = document.getElementById('attributes');
+    attributesDiv.removeChild(attributeDiv);
+  }
+});
+
+
+
+
+
+
+document.getElementById('product-form').addEventListener('submit', function(event) {
+  event.preventDefault(); // Предотвращаем стандартное действие отправки формы
+
+  // Получаем значения из полей формы
+  var name = document.getElementById('name').value;
+  var price = document.getElementById('price').value;
+  var description = document.getElementById('description').value;
+  var attributes = [];
+  var attributeDivs = document.getElementsByClassName('attribute');
+  for (var i = 0; i < attributeDivs.length; i++) {
+    var key = attributeDivs[i].querySelector('input[name="key[]"]').value;
+    var value = attributeDivs[i].querySelector('input[name="value[]"]').value;
+    attributes.push({ key: key, value: value });
+  }
+
+  // Создаем объект с данными для отправки на сервер
+  var data = {
+    name: name,
+    price: price,
+    description: description,
+    attributes: attributes
+  };
+
+  // Отправляем данные на сервер с использованием Fetch API или другого способа
+  fetch('http://127.0.0.1:8000/api/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(function(response) {
+    if (response.ok) {
+      // Если запрос успешен, можно выполнить дополнительную логику
+      console.log('Данные успешно отправлены на сервер');
+    } else {
+      // Если запрос не успешен, можно выполнить обработку ошибки
+      console.error('Ошибка при отправке данных на сервер');
+    }
+  })
+  .catch(function(error) {
+    // Если произошла ошибка при выполнении запроса, можно выполнить обработку ошибки
+    console.error('Произошла ошибка при отправке данных на сервер:', error);
+  });
+});
+
+
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
