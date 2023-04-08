@@ -1,0 +1,33 @@
+services:
+  web-app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Magazine:/Magazine
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+
+    environment:
+      - DB_HOST=database
+      - DB_NAME=dbname
+      - DB_USER=dbuser
+      - DB_PASS=pass
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+
+  database:
+    image: postgres:14.6-alpine
+    environment:
+      - POSTGRES_DB=dbname
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=pass
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U dbuser -d dbname" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
