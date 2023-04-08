@@ -1,54 +1,64 @@
-          #product-form {
-    max-width: 500px;
+  /* Общий контейнер */
+  .container {
+    max-width: 400px;
     margin: 0 auto;
+  }
+
+  /* Форма */
+  #product-form {
     padding: 20px;
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
+    background-color: #f0f0f0;
     border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   }
 
-  label, input, textarea {
-    display: block;
-    margin-bottom: 10px;
-  }
-
+  /* Заголовок */
   label {
+    display: block;
+    margin-bottom: 5px;
     font-weight: bold;
+    color: #333;
   }
 
-  input, textarea {
+  /* Поля ввода */
+  input[type="text"],
+  input[type="number"] {
     width: 100%;
-    padding: 5px;
-    border: 1px solid #ddd;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
     border-radius: 3px;
   }
 
-  input[type="file"] {
-    margin-top: 5px;
-  }
-
-  .attribute {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 5px;
-    margin-bottom: 5px;
-  }
-
-  .attribute input {
+  /* Зона для загрузки картинок */
+  #image-dropzone {
     width: 100%;
+    height: 300px; /* Измененный размер */
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 200px; /* Измененный размер */
+    font-size: 16px;
+    color: #999;
+    cursor: pointer;
+    overflow: hidden; /* Исправление для отображения картинок внутри дропзоны */
   }
 
-  .remove-attribute {
-    align-self: center;
-    justify-self: end;
+  /* Кнопка выбора файлов */
+  #image-input-label {
+    display: inline-block;
+    padding: 10px 15px;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 3px;
     cursor: pointer;
   }
 
-  /* Стили для кнопки "Добавить атрибут" */
-  #add-attribute {
-    display: block;
+  /* Кнопки добавления/удаления характеристик */
+  #add-attribute,
+  #remove-attribute {
     margin-top: 10px;
-    padding: 5px 10px;
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -56,8 +66,66 @@
     cursor: pointer;
   }
 
-  #add-attribute:hover {
-    background-color: #0056b3;
+  /* Кнопка добавления характеристики */
+  #add-attribute {
+    margin-right: 10px;
   }
+
+  /* Кнопка удаления характеристики */
+  #remove-attribute {
+    background-color: #dc3545;
+  }
+
+  /* Кнопка отправки формы */
+  button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    margin-top: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+
+ .cancel-button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    margin-top: 10px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out; /* Анимация при изменении цвета фона */
+  }
+
+
+
+
+ /* Стили для контейнера с дропзоной */
+  #image-dropzone.dropzone {
+    /* Ваши стили для контейнера с дропзоной */
+    overflow-y: auto; /* Добавляем скроллбар при превышении высоты блока */
+    max-height: 300px; /* Максимальная высота блока, после которой будет появляться скроллбар */
+  }
+
+  /* Стили для скроллбара */
+  #image-dropzone.dropzone::-webkit-scrollbar {
+    width: 8px; /* Ширина скроллбара */
+  }
+
+  #image-dropzone.dropzone::-webkit-scrollbar-thumb {
+    background-color: #888; /* Цвет скроллбара */
+    border-radius: 4px; /* Радиус скроллбара */
+  }
+
+  #image-dropzone.dropzone::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Цвет скроллбара при наведении */
+  }
+
 
 
